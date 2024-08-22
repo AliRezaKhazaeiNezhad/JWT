@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace KHN.API.Controllers
 {
@@ -54,6 +55,14 @@ namespace KHN.API.Controllers
             {
                 return Unauthorized(ex.Message);
             }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync("JwtBearer");
+            return Ok();
         }
 
 

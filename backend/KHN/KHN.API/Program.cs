@@ -18,14 +18,25 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer("Bearer", options =>
 {
+    //options.TokenValidationParameters = new TokenValidationParameters
+    //{
+    //    ValidateIssuer = true,
+    //    ValidateAudience = true,
+    //    ValidateLifetime = true,
+    //    ValidateIssuerSigningKey = true,
+    //    ValidIssuer = "https://www.front.example.com/",
+    //    ValidAudience = "https://www.api.example.com/",
+    //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"))
+    //};
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://www.front.example.com/",
-        ValidAudience = "https://www.api.example.com/",
+        ValidIssuer = "*",
+        ValidAudience = "*",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"))
     };
 });
@@ -34,7 +45,12 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors(policy =>
+{
+    policy.AllowAnyOrigin();
+    policy.AllowAnyMethod();
+    policy.AllowAnyHeader();
+});
 
 app.UseAuthorization();
 

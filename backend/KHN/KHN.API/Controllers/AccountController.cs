@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 
 namespace KHN.API.Controllers
 {
     [Route("[controller]")]
+    [Authorize(Policy = "JwtBearer")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -21,6 +21,7 @@ namespace KHN.API.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("Login")]
         public IActionResult Login([FromBody] LoginModel model)
         {
@@ -34,7 +35,7 @@ namespace KHN.API.Controllers
             }
 
 
-            var tokenString = _jWT.GenerateToken(800, model.Username, 0);
+            var tokenString = _jWT.GenerateToken(1, model.Username, 0);
 
             return Ok(new { token = tokenString });
         }
@@ -57,13 +58,6 @@ namespace KHN.API.Controllers
             }
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> SignOut()
-        {
-            await HttpContext.SignOutAsync("JwtBearer");
-            return Ok();
-        }
 
 
 
